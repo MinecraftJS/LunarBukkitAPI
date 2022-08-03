@@ -1,6 +1,6 @@
 {
   "name": "@minecraft-js/lunarbukkitapi",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Defines the Lunar Client Bukkit protocol",
   "main": "dist/index.js",
   "scripts": {
