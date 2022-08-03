@@ -151,7 +151,7 @@ export class LunarClientPlayer {
   /**
    * Remove all waypoints loaded by the player
    */
-  public removeAllWayoints(): void {
+  public removeAllWaypoints(): void {
     for (const waypoint of this.waypoints) this.removeWaypoint(waypoint);
     this.waypoints = [];
   }
@@ -159,13 +159,13 @@ export class LunarClientPlayer {
   /** Send a notification to the client
    * @param message Message to send
    * @param durationMs Duration of the message in milliseconds
-   * @param level Message level, set to `info` by default
+   * @param level Message level, defaults to `NotificationLevel.INFO`
    * @deprecated This packet is not supported by the client by default
    */
   public sendNotification(
     message: string,
     durationMs: number,
-    level: NotificationLevel
+    level: NotificationLevel = NotificationLevel.INFO
   ): void {
     const { packet } = new PacketBuilder('NotificationPacket', {
       message,
