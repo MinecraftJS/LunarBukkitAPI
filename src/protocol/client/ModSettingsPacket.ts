@@ -27,7 +27,7 @@ interface ModSettings {
   settings: {
     [key in LunarMod]?: {
       enabled: boolean;
-      properties: { [key: string]: any };
+      properties: { [key: string]: unknown };
     };
   };
 }
