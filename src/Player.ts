@@ -407,7 +407,7 @@ export class LunarClientPlayer {
     const buffer = packet instanceof Packet ? packet.buf.buffer : packet;
 
     if (this.options?.customHandling?.sendPacket)
-      this.options.customHandling.sendPacket(buffer);
+      return void this.options.customHandling.sendPacket(buffer);
 
     throw new Error(
       'For now, you must provide a sendPacket function in the options'
