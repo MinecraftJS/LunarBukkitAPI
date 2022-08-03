@@ -1,7 +1,7 @@
 import deprecatePacket from '../../util/deprecatePacket';
 import { Packet } from '../Packet';
 
-export class _VoicePacket extends Packet<Voice> {
+class _VoicePacket extends Packet<Voice> {
   public static id = 16;
 
   public write(data?: Voice): void {

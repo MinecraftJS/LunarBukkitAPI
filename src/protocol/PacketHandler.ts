@@ -1,10 +1,10 @@
 import { BufWrapper } from '@minecraft-js/bufwrapper';
 import { EventEmitter } from 'node:events';
 import TypedEmitter from 'typed-emitter';
-import * as protocol from './protocol';
-import * as BufWrapperLunarPlugin from './protocol/BufWrapperPlugin';
+import * as protocol from '.';
+import * as BufWrapperLunarPlugin from './BufWrapperPlugin';
 
-type PacketHandlerEvents = {
+type LunarClientPacketHandlerEvents = {
   [key in keyof typeof protocol]: (
     packet: InstanceType<typeof protocol[key]>
   ) => void;
@@ -34,7 +34,7 @@ const packets = Object.values(protocol);
  * });
  * ```
  */
-export default class PacketHandler extends (EventEmitter as new () => TypedEmitter<PacketHandlerEvents>) {
+export default class LunarClientPacketHandler extends (EventEmitter as new () => TypedEmitter<LunarClientPacketHandlerEvents>) {
   /**
    * Handle a packet, if everything is successful
    * an event will be emited with the content of

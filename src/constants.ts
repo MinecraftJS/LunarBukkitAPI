@@ -3,7 +3,7 @@
  * to establish the connection between
  * the client and the server
  */
-export enum PluginChannel {
+export enum LunarClientPluginChannel {
   /**
    * New plugin channel, recommended
    *
@@ -78,6 +78,8 @@ export enum ServerRuleEnum {
   LEGACY_COMBAT = 'legacyCombat',
 }
 
+export type ServerRuleValue = 'boolean' | 'int' | 'float' | 'string';
+
 /**
  * MinimapStatus values for the server rule
  */
@@ -102,7 +104,7 @@ export declare enum StaffMod {
  *
  * Some of them are not present anymore be careful!
  */
-export enum LunarMod {
+export enum LunarClientMod {
   TIME_CHANGER = 'time_changer',
   NEU = 'neu',
   NAMETAG = 'nametag',
@@ -144,7 +146,7 @@ export enum LunarMod {
   SCROLLABLE_TOOLTIPS = 'scrollable_tooltips',
   ITEMS2D = 'items2d',
   DAYCOUNTER = 'daycounter',
-  SKIN_LAYERS3_D = 'skinLayers3D',
+  SKIN_LAYERS_3D = 'skinLayers3D',
   WEATHER_CHANGER = 'weather_changer',
   CPS = 'cps',
   CLOCK = 'clock',
@@ -179,4 +181,49 @@ export enum LunarMod {
   COMP_WARN = 'comp_warn',
   VOICE = 'voice',
   TITLES = 'titles',
+}
+
+/**
+ * Waypoint object. Used when creating waypoints.
+ */
+export interface Waypoint {
+  /**
+   * Name of the waypoint
+   */
+  name: string;
+  /**
+   * X coordinate of the waypoint
+   */
+  x: number;
+  /**
+   * Y coordinate of the waypoint
+   */
+  y: number;
+  /**
+   * Z coordinate of the waypoint
+   */
+  z: number;
+  /**
+   * Color of the waypoint
+   */
+  color: number;
+  /**
+   * I don't really know what this is, if you know please tell me or open a pull request with this comment changed
+   */
+  forced: boolean;
+  /**
+   * If the waypoint is visible
+   */
+  visible: boolean;
+}
+
+export interface TeammatePlayer {
+  /** UUID of the player */
+  uuid: string;
+  /** X fallback value when the player is out of render distance */
+  x?: number;
+  /** Y fallback value when the player is out of render distance */
+  y?: number;
+  /** Z fallback value when the player is out of render distance */
+  z?: number;
 }

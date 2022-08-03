@@ -1,8 +1,8 @@
 import { VoiceChannelUpdateStatus } from '../../constants';
+import deprecatePacket from '../../util/deprecatePacket';
 import { Packet } from '../Packet';
 
-/** @deprecated Packet not handled by the official Lunar Client */
-export class VoiceChannelUpdatePacket extends Packet<VoiceChannelUpdate> {
+class _VoiceChannelUpdatePacket extends Packet<VoiceChannelUpdate> {
   public static id = 19;
 
   public write(data?: VoiceChannelUpdate): void {
@@ -27,6 +27,11 @@ export class VoiceChannelUpdatePacket extends Packet<VoiceChannelUpdate> {
     return this.data;
   }
 }
+
+/** @deprecated Packet not handled by the official Lunar Client */
+export const VoiceChannelUpdatePacket = deprecatePacket(
+  _VoiceChannelUpdatePacket
+);
 
 /**
  * Voice channel update packet

@@ -1,7 +1,7 @@
 import deprecatePacket from '../../util/deprecatePacket';
 import { Packet } from '../Packet';
 
-export class _EmoteBroadcastPacket extends Packet<EmoteBroadcast> {
+class _EmoteBroadcastPacket extends Packet<EmoteBroadcast> {
   public static id = 26;
 
   public write(data?: EmoteBroadcast): void {

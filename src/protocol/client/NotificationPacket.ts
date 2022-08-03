@@ -2,7 +2,7 @@ import { NotificationLevel } from '../../constants';
 import deprecatePacket from '../../util/deprecatePacket';
 import { Packet } from '../Packet';
 
-export class _NotificationPacket extends Packet<Notification> {
+class _NotificationPacket extends Packet<Notification> {
   public static id = 9;
 
   public write(data?: Notification): void {

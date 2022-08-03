@@ -53,7 +53,7 @@ export class TeammatesPacket extends Packet<Teammates> {
 
 /**
  * Teammates packet
- * @see https://github.com/LunarClient/BukkitAPI-NetHandler/blob/master/src/main/java/com/lunarclient/bukkitapi/nethandler/client/LCPacketHologramRemove.java
+ * @see https://github.com/LunarClient/BukkitAPI-NetHandler/blob/master/src/main/java/com/lunarclient/bukkitapi/nethandler/client/LCPacketTeammates.java
  */
 interface Teammates {
   /** UUID of the team leader */

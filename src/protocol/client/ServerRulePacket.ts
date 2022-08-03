@@ -8,7 +8,7 @@ export class ServerRulePacket extends Packet<ServerRule> {
     this.data = data || this.data;
 
     this.buf.writeString(this.data.rule);
-    this.buf.writeBoolean(this.data.boolean);
+    this.buf.writeBoolean(this.data.booleanValue);
     this.buf.writeInt(this.data.intValue);
     this.buf.writeFloat(this.data.floatValue);
     this.buf.writeString(this.data.stringValue);
@@ -19,7 +19,7 @@ export class ServerRulePacket extends Packet<ServerRule> {
   public read(): ServerRule {
     this.data = {
       rule: this.buf.readString() as ServerRuleEnum,
-      boolean: this.buf.readBoolean(),
+      booleanValue: this.buf.readBoolean(),
       intValue: this.buf.readInt(),
       floatValue: this.buf.readFloat(),
       stringValue: this.buf.readString(),
@@ -35,7 +35,7 @@ export class ServerRulePacket extends Packet<ServerRule> {
  */
 type ServerRule = {
   rule: ServerRuleEnum;
-  boolean?: boolean;
+  booleanValue?: boolean;
   intValue?: number;
   floatValue?: number;
   stringValue?: string;

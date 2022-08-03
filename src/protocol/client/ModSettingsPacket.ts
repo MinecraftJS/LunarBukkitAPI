@@ -1,4 +1,4 @@
-import { LunarMod } from '../../constants';
+import { LunarClientMod } from '../../constants';
 import { Packet } from '../Packet';
 
 export class ModSettingsPacket extends Packet<ModSettings> {
@@ -25,7 +25,7 @@ export class ModSettingsPacket extends Packet<ModSettings> {
  */
 interface ModSettings {
   settings: {
-    [key in LunarMod]?: {
+    [key in LunarClientMod]?: {
       enabled: boolean;
       properties: { [key: string]: unknown };
     };

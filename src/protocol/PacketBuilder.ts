@@ -1,6 +1,6 @@
 import { BufWrapper } from '@minecraft-js/bufwrapper';
-import { BufWrapperLunarPlugin } from '.';
-import * as protocol from './protocol';
+import * as protocol from '.';
+import * as BufWrapperLunarPlugin from './BufWrapperPlugin';
 
 /**
  * PacketBuiler class, used to easily build packets.
@@ -15,7 +15,7 @@ import * as protocol from './protocol';
  * // Do something with `packet`
  * ```
  */
-export default class PacketBuilder<T extends keyof typeof protocol> {
+export default class LunarClientPacketBuilder<T extends keyof typeof protocol> {
   public packet: InstanceType<typeof protocol[T]>;
 
   /**
