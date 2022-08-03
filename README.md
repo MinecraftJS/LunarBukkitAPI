@@ -2,7 +2,7 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/MinecraftJS/LunarBukkitAPI/Build?style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/MinecraftJS/LunarBukkitAPI?style=for-the-badge)
-![npm (scoped)](https://img.shields.io/npm/v/@minecraft-js/LunarBukkitAPI?style=for-the-badge)
+![npm (scoped)](https://img.shields.io/npm/v/@minecraft-js/lunarbukkitapi?style=for-the-badge)
 
 Defines the Lunar Client Bukkit protocol
 
