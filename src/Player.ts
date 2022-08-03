@@ -65,6 +65,9 @@ export class LunarClientPlayer {
    *     sendPacket: (buffer) {
    *        // Somehow send the packet
    *        // to the client
+   *     },
+   *     registerPluginChannel: (channel) {
+   *        // Somehow register the channel
    *     }
    *   }
    * });
