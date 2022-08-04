@@ -6,7 +6,10 @@ export class TeammatesPacket extends Packet<Teammates> {
   public write(data?: Teammates): void {
     this.data = data || this.data;
 
-    this.buf.writeUUID(this.data.leader);
+    const isNotNull = this.data.leader !== null;
+    this.buf.writeBoolean(isNotNull);
+
+    if (isNotNull) this.buf.writeUUID(this.data.leader);
     this.buf.writeLong(this.data.lastMs);
 
     this.buf.writeVarInt(this.data.players.length);
@@ -25,7 +28,9 @@ export class TeammatesPacket extends Packet<Teammates> {
   }
 
   public read(): Teammates {
-    const leader = this.buf.readUUID();
+    let leader: string = null;
+    if (this.buf.readBoolean()) leader = this.buf.readUUID();
+
     const lastMs = this.buf.readLong();
 
     const playersLength = this.buf.readVarInt();

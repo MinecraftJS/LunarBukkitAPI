@@ -91,7 +91,7 @@ export enum MiniMapStatus {
 /**
  * List of all the staff mods
  */
-export declare enum StaffMod {
+export enum StaffMod {
   XRAY = 'XRAY',
   /** @deprecated Not in the game anymore */
   NAME_TAGS = 'NAME_TAGS',
