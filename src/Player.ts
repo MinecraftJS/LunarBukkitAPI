@@ -1,3 +1,4 @@
+import { parseUUID, UUID } from '@minecraft-js/uuid';
 import {
   LunarClientMod,
   LunarClientPluginChannel,
@@ -24,7 +25,7 @@ export class LunarClientPlayer {
    */
   public isConnected: boolean;
   /** UUID for this player */
-  public uuid: string;
+  public uuid: UUID;
   /**
    * Plugin channel used to establish the
    * connection, defaults to
@@ -86,7 +87,7 @@ export class LunarClientPlayer {
     if (this.options?.channelAlreadyRegistered) this.isConnected = true;
     else this.isConnected = false;
 
-    this.uuid = options?.playerUUID ?? '';
+    this.uuid = options?.playerUUID ?? null;
     this.channel = this.options?.pluginChannel || LunarClientPluginChannel.NEW;
 
     this.waypoints = [];
@@ -200,8 +201,13 @@ export class LunarClientPlayer {
    * @param teammate Teammate UUID or teammate object
    * @returns Whether or not this operation was successful
    */
-  public removeTeammate(teammate: string | TeammatePlayer): boolean {
-    teammate = typeof teammate === 'string' ? teammate : teammate.uuid;
+  public removeTeammate(teammate: string | UUID | TeammatePlayer): boolean {
+    teammate =
+      typeof teammate === 'string'
+        ? parseUUID(teammate)
+        : teammate instanceof UUID
+        ? teammate
+        : teammate.uuid;
 
     if (!this.teammates.find((t) => t.uuid === teammate)) return false;
     this.teammates = this.teammates.filter((t) => t.uuid !== teammate);
@@ -458,5 +464,5 @@ export interface LunarClientPlayerOptions {
    * packet for the leader field
    * @see [TeammatesPacket](./protocol/client/TeammatesPacket.ts)
    */
-  playerUUID?: string;
+  playerUUID?: UUID;
 }

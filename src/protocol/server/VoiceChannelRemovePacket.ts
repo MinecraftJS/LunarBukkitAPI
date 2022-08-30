@@ -1,3 +1,4 @@
+import { UUID } from '@minecraft-js/uuid';
 import { Packet } from '../Packet';
 
 export class VoiceChannelRemovePacket extends Packet<VoiceChannelRemove> {
@@ -26,5 +27,5 @@ export class VoiceChannelRemovePacket extends Packet<VoiceChannelRemove> {
  */
 interface VoiceChannelRemove {
   /** UUID of the channel */
-  uuid: string;
+  uuid: UUID;
 }

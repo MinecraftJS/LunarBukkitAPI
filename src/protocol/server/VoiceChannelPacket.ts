@@ -1,3 +1,4 @@
+import { UUID } from '@minecraft-js/uuid';
 import { Packet } from '../Packet';
 
 export class VoiceChannelPacket extends Packet<VoiceChannel> {
@@ -33,7 +34,7 @@ export class VoiceChannelPacket extends Packet<VoiceChannel> {
  */
 interface VoiceChannel {
   /** UUID of the channel */
-  uuid: string;
+  uuid: UUID;
   /** Name of the channel */
   name: string;
   players: { [key: string]: string };

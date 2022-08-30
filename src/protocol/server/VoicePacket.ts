@@ -1,3 +1,4 @@
+import { UUID } from '@minecraft-js/uuid';
 import deprecatePacket from '../../util/deprecatePacket';
 import { Packet } from '../Packet';
 
@@ -17,7 +18,7 @@ class _VoicePacket extends Packet<Voice> {
 
   public read(): Voice {
     const uuidsLength = this.buf.readVarInt();
-    const uuids: string[] = [];
+    const uuids: UUID[] = [];
     for (let i = 0; i < uuidsLength; i++) uuids.push(this.buf.readUUID());
 
     this.data = {
@@ -38,7 +39,7 @@ export const VoicePacket = deprecatePacket(_VoicePacket);
  */
 interface Voice {
   /** The UUID of all the senders */
-  uuids: string[];
+  uuids: UUID[];
   /** The "smashed" bytes of all the voice */
   data: number[];
 }

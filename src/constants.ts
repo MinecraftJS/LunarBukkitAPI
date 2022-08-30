@@ -1,3 +1,5 @@
+import { UUID } from '@minecraft-js/uuid';
+
 /**
  * Plugin channels Lunar Client uses
  * to establish the connection between
@@ -219,7 +221,7 @@ export interface Waypoint {
 
 export interface TeammatePlayer {
   /** UUID of the player */
-  uuid: string;
+  uuid: UUID;
   /** X fallback value when the player is out of render distance */
   x?: number;
   /** Y fallback value when the player is out of render distance */

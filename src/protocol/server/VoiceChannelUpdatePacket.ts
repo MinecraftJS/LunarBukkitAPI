@@ -1,3 +1,4 @@
+import { UUID } from '@minecraft-js/uuid';
 import { VoiceChannelUpdateStatus } from '../../constants';
 import deprecatePacket from '../../util/deprecatePacket';
 import { Packet } from '../Packet';
@@ -41,9 +42,9 @@ interface VoiceChannelUpdate {
   /** Status of the channel */
   status: VoiceChannelUpdateStatus;
   /** UUID of the channel */
-  channelUuid: string;
+  channelUuid: UUID;
   /** UUID of the player */
-  uuid: string;
+  uuid: UUID;
   /** Name of the player */
   name: string;
 }

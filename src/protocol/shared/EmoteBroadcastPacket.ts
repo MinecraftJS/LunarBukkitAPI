@@ -1,3 +1,4 @@
+import { UUID } from '@minecraft-js/uuid';
 import deprecatePacket from '../../util/deprecatePacket';
 import { Packet } from '../Packet';
 
@@ -32,7 +33,7 @@ export const EmoteBroadcastPacket = deprecatePacket(_EmoteBroadcastPacket);
  */
 interface EmoteBroadcast {
   /** User doing the emote */
-  uuid: string;
+  uuid: UUID;
   /** Emote they are doing */
   emoteId: number;
 }
