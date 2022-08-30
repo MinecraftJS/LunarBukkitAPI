@@ -1,4 +1,5 @@
 import { BufWrapper } from '@minecraft-js/bufwrapper';
+import { parseUUID } from '@minecraft-js/uuid';
 
 type MapResolvable = { [key: string]: string };
 
@@ -26,7 +27,7 @@ export function writeMap(this: BufWrapper, value: MapResolvable): void {
 
   this.writeVarInt(keys.length);
   for (const key of keys) {
-    this.writeUUID(key);
+    this.writeUUID(parseUUID(key));
     this.writeString(value[key]);
   }
 }
@@ -51,7 +52,8 @@ export function readMap(this: BufWrapper): MapResolvable {
   const length = this.readVarInt();
   const map: MapResolvable = {};
 
-  for (let i = 0; i < length; i++) map[this.readUUID()] = this.readString();
+  for (let i = 0; i < length; i++)
+    map[this.readUUID().toString()] = this.readString();
 
   return map;
 }

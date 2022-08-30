@@ -1,3 +1,4 @@
+import { UUID } from '@minecraft-js/uuid';
 import { Packet } from '../Packet';
 
 export class VoiceMutePacket extends Packet<VoiceMute> {
@@ -27,6 +28,6 @@ export class VoiceMutePacket extends Packet<VoiceMute> {
  * @see https://github.com/LunarClient/BukkitAPI-NetHandler/blob/master/src/main/java/com/lunarclient/bukkitapi/nethandler/client/LCPacketVoiceMute.java
  */
 interface VoiceMute {
-  muting: string;
+  muting: UUID;
   volume: number;
 }

@@ -1,3 +1,4 @@
+import { UUID } from '@minecraft-js/uuid';
 import { Packet } from '../Packet';
 
 export class NametagsOverridePacket extends Packet<NametagsOverride> {
@@ -45,6 +46,6 @@ export class NametagsOverridePacket extends Packet<NametagsOverride> {
  */
 interface NametagsOverride {
   /** UUID of the player */
-  player: string;
+  player: UUID;
   tags: string[];
 }

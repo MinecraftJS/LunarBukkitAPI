@@ -1,3 +1,4 @@
+import { UUID } from '@minecraft-js/uuid';
 import { Packet } from '../Packet';
 
 export class TeammatesPacket extends Packet<Teammates> {
@@ -28,7 +29,7 @@ export class TeammatesPacket extends Packet<Teammates> {
   }
 
   public read(): Teammates {
-    let leader: string = null;
+    let leader: UUID = null;
     if (this.buf.readBoolean()) leader = this.buf.readUUID();
 
     const lastMs = this.buf.readLong();
@@ -62,11 +63,11 @@ export class TeammatesPacket extends Packet<Teammates> {
  */
 interface Teammates {
   /** UUID of the team leader */
-  leader: string;
+  leader: UUID;
   lastMs: number;
   /** List of the players in the team */
   players: {
-    uuid: string;
+    uuid: UUID;
     posMap: { [key: string]: number };
   }[];
 }

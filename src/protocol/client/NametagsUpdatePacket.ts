@@ -1,3 +1,4 @@
+import { UUID } from '@minecraft-js/uuid';
 import { Packet } from '../Packet';
 
 export class NametagsUpdatePacket extends Packet<NametagsUpdate> {
@@ -47,7 +48,7 @@ export class NametagsUpdatePacket extends Packet<NametagsUpdate> {
  */
 interface NametagsUpdate {
   playersMap: {
-    uuid: string;
+    uuid: UUID;
     tags: string[];
   }[];
 }

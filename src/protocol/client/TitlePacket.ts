@@ -18,7 +18,7 @@ export class TitlePacket extends Packet<Title> {
 
   public read(): Title {
     this.data = {
-      type: this.buf.readUUID(),
+      type: this.buf.readString(),
       message: this.buf.readString(),
       scale: this.buf.readFloat(),
       displayTimeMs: this.buf.readLong(),

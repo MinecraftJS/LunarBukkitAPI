@@ -1,3 +1,4 @@
+import { UUID } from '@minecraft-js/uuid';
 import deprecatePacket from '../../util/deprecatePacket';
 import { Packet } from '../Packet';
 
@@ -18,12 +19,12 @@ class _GhostPacket extends Packet<Ghost> {
 
   public read(): Ghost {
     const addGhostListLength = this.buf.readVarInt();
-    const addGhostList: string[] = [];
+    const addGhostList: UUID[] = [];
     for (let i = 0; i < addGhostListLength; i++)
       addGhostList.push(this.buf.readUUID());
 
     const removeGhostListLength = this.buf.readVarInt();
-    const removeGhostList: string[] = [];
+    const removeGhostList: UUID[] = [];
     for (let i = 0; i < removeGhostListLength; i++)
       removeGhostList.push(this.buf.readUUID());
 
@@ -41,6 +42,6 @@ export const GhostPacket = deprecatePacket(_GhostPacket);
  * @see https://github.com/LunarClient/BukkitAPI-NetHandler/blob/master/src/main/java/com/lunarclient/bukkitapi/nethandler/client/LCPacketGhost.java
  */
 interface Ghost {
-  addGhostList: string[];
-  removeGhostList: string[];
+  addGhostList: UUID[];
+  removeGhostList: UUID[];
 }

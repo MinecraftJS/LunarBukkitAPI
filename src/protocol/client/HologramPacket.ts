@@ -1,3 +1,4 @@
+import { UUID } from '@minecraft-js/uuid';
 import { Packet } from '../Packet';
 
 export class HologramPacket extends Packet<Hologram> {
@@ -44,7 +45,7 @@ export class HologramPacket extends Packet<Hologram> {
  */
 interface Hologram {
   /** UUID of the hologram */
-  uuid: string;
+  uuid: UUID;
   /** X coordinate of the hologram */
   x: number;
   /** Y coordinate of the hologram */
