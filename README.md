@@ -72,3 +72,20 @@ server.on('login', (client) => {
   lunarPlayer.addCooldown('pearl', 15000, 368);
 });
 ```
+
+# Benchmarks
+
+Packet used in the benchmark: `CooldownPacket`
+
+Computer specs: Ryzen 5 3600 - 16GB at 2100MHz
+
+```
+Reading x 836,146 ops/sec ±0.28% (97 runs sampled)
+Writing x 432,880 ops/sec ±1.23% (95 runs sampled)
+```
+
+Run this command to run the benchmarks on your machine
+
+```bash
+$ npm run benchmark
+```
