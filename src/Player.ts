@@ -407,6 +407,10 @@ export class LunarClientPlayer {
     this.packetReader.read(buffer);
   }
 
+  /**
+   * Transfer the client to the given server
+   * @param servers Array of server ips
+   */
   public transfer(servers: string[]): void {
     const { packet } = new LunarClientPacketWriter('TransferPacket', {
       servers,
@@ -442,7 +446,7 @@ export class LunarClientPlayer {
           'PluginMessagePacket',
           {
             channel: 'REGISTER',
-            data: Buffer.from(channel + '\0'),
+            data: Buffer.from(`${channel}\0`),
           }
         );
 
