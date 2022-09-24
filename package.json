@@ -24,6 +24,7 @@
   "homepage": "https://github.com/MinecraftJS/LunarBukkitAPI#readme",
   "dependencies": {
     "@minecraft-js/bufwrapper": "^1.4.6",
+    "@minecraft-js/protocol-1.8": "^1.0.2",
     "@minecraft-js/uuid": "^1.0.3"
   },
   "devDependencies": {

@@ -14,6 +14,7 @@ export * from './ServerUpdatePacket';
 export * from './StaffModStatePacket';
 export * from './TeammatesPacket';
 export * from './TitlePacket';
+export * from './TransferPacket';
 export * from './UpdateWorldPacket';
 export * from './VoiceChannelSwitchPacket';
 export * from './VoiceMutePacket';

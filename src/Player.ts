@@ -1,3 +1,7 @@
+import {
+  MinecraftClient,
+  MinecraftServerClient,
+} from '@minecraft-js/protocol-1.8';
 import { parseUUID, UUID } from '@minecraft-js/uuid';
 import {
   LunarClientMod,
@@ -11,8 +15,8 @@ import {
 } from './constants';
 import type { ModSettingsPacket, ServerRulePacket } from './protocol';
 import { Packet } from './protocol/Packet';
-import PacketBuilder from './protocol/PacketBuilder';
-import LunarClientPacketHandler from './protocol/PacketHandler';
+import LunarClientPacketReader from './protocol/PacketReader';
+import LunarClientPacketWriter from './protocol/PacketWriter';
 
 /**
  * Class that represents a Lunar Client player
@@ -50,7 +54,7 @@ export class LunarClientPlayer {
   /** Options passed in the constructor */
   private readonly options?: LunarClientPlayerOptions;
   /** Internal packet handler */
-  private readonly handler: LunarClientPacketHandler;
+  private readonly packetReader: LunarClientPacketReader;
 
   /**
    * Instantiate a new Lunar Client player
@@ -84,6 +88,11 @@ export class LunarClientPlayer {
   public constructor(options?: LunarClientPlayerOptions) {
     this.options = options;
 
+    if (!this.options.customHandling && !this.options.client)
+      throw new Error(
+        'You must provide a custom handling or a MinecraftServerClient/MinecraftClient'
+      );
+
     if (this.options?.channelAlreadyRegistered) this.isConnected = true;
     else this.isConnected = false;
 
@@ -100,15 +109,7 @@ export class LunarClientPlayer {
    * plugin channel packet
    */
   public connect(): void {
-    if (this.options?.customHandling?.registerPluginChannel) {
-      this.options.customHandling.registerPluginChannel(this.channel);
-      this.isConnected = true;
-      return;
-    }
-
-    throw new Error(
-      'For now, you must provide a registerPluginChannel function in the options'
-    );
+    this.registerPluginChannels();
   }
 
   /**
@@ -120,7 +121,7 @@ export class LunarClientPlayer {
     if (this.waypoints.find((w) => w.name === waypoint.name)) return false;
     this.waypoints.push(waypoint);
 
-    const { packet } = new PacketBuilder('WaypointAddPacket', {
+    const { packet } = new LunarClientPacketWriter('WaypointAddPacket', {
       ...waypoint,
       world: '',
     });
@@ -140,7 +141,7 @@ export class LunarClientPlayer {
     if (!this.waypoints.find((w) => w.name === waypoint)) return false;
     this.waypoints = this.waypoints.filter((w) => w.name !== waypoint);
 
-    const { packet } = new PacketBuilder('WaypointRemovePacket', {
+    const { packet } = new LunarClientPacketWriter('WaypointRemovePacket', {
       name: waypoint,
       world: '',
     });
@@ -168,7 +169,7 @@ export class LunarClientPlayer {
     durationMs: number,
     level: NotificationLevel = NotificationLevel.INFO
   ): void {
-    const { packet } = new PacketBuilder('NotificationPacket', {
+    const { packet } = new LunarClientPacketWriter('NotificationPacket', {
       message,
       durationMs,
       level,
@@ -232,7 +233,7 @@ export class LunarClientPlayer {
    * to the client
    */
   private sendTeammateList(): void {
-    const { packet } = new PacketBuilder('TeammatesPacket', {
+    const { packet } = new LunarClientPacketWriter('TeammatesPacket', {
       leader: this.uuid,
       lastMs: Date.now(),
       players: this.teammates.map((teammate) => ({
@@ -264,7 +265,7 @@ export class LunarClientPlayer {
       durationMs
     );
 
-    const { packet } = new PacketBuilder('CooldownPacket', {
+    const { packet } = new LunarClientPacketWriter('CooldownPacket', {
       id,
       durationMs,
       iconId,
@@ -283,7 +284,7 @@ export class LunarClientPlayer {
     if (!this.cooldowns.find((c) => c === id)) return false;
     this.cooldowns = this.cooldowns.filter((c) => c !== id);
 
-    const { packet } = new PacketBuilder('CooldownPacket', {
+    const { packet } = new LunarClientPacketWriter('CooldownPacket', {
       id,
       durationMs: 0,
       iconId: 0,
@@ -299,7 +300,10 @@ export class LunarClientPlayer {
    * @param state State to apply
    */
   public setStaffModState(mod: StaffMod, state: boolean): void {
-    const { packet } = new PacketBuilder('StaffModStatePacket', { mod, state });
+    const { packet } = new LunarClientPacketWriter('StaffModStatePacket', {
+      mod,
+      state,
+    });
     this.sendPacket(packet);
   }
 
@@ -322,7 +326,7 @@ export class LunarClientPlayer {
     // to type this but it works fine
     data[`${valueType}Value`] = value;
 
-    const { packet } = new PacketBuilder('ServerRulePacket', data);
+    const { packet } = new LunarClientPacketWriter('ServerRulePacket', data);
 
     this.sendPacket(packet);
   }
@@ -384,7 +388,7 @@ export class LunarClientPlayer {
    * packet to the client
    */
   private sendModSettings(): void {
-    const { packet } = new PacketBuilder('ModSettingsPacket', {
+    const { packet } = new LunarClientPacketWriter('ModSettingsPacket', {
       settings: this.modSettings,
     });
 
@@ -392,15 +396,61 @@ export class LunarClientPlayer {
   }
 
   /**
-   * Handle the given packet.
+   * Read the given packet.
    *
    * Call this method only if you
    * want to manually override
    * the packet handling
-   * @param buffer Packet to handle
+   * @param buffer Packet to read
    */
-  public handlePacket(buffer: Buffer): void {
-    this.handler.handle(buffer);
+  public readPacket(buffer: Buffer): void {
+    this.packetReader.read(buffer);
+  }
+
+  public transfer(servers: string[]): void {
+    const { packet } = new LunarClientPacketWriter('TransferPacket', {
+      servers,
+    });
+
+    this.sendPacket(packet);
+  }
+
+  /**
+   * Register the required Plugin Channel
+   * on the client to communicate to the
+   * client/server.
+   * Registers:
+   * - The communication channel (`lunarclient:pm` or `Lunar-Client`)
+   * - The transfer packet channel (`transfer:channel`)
+   */
+  private registerPluginChannels(): void {
+    const channels = [this.channel, LunarClientPluginChannel.TRANSFER];
+
+    if (this.options?.customHandling?.registerPluginChannel) {
+      for (const channel of channels)
+        this.options.customHandling.registerPluginChannel(channel);
+
+      return void (this.isConnected = true);
+    }
+
+    if (this.options.client) {
+      for (const channel of channels) {
+        // @ts-ignore We can safely ignore this issue because
+        // the PluginMessagePacket is available in both
+        // serverbound and clientbound contexts
+        const pluginMessage = this.options.client.packetWriter.write(
+          'PluginMessagePacket',
+          {
+            channel: 'REGISTER',
+            data: Buffer.from(channel + '\0'),
+          }
+        );
+
+        this.options.client.writeRaw(pluginMessage);
+      }
+
+      return void (this.isConnected = true);
+    }
   }
 
   /**
@@ -409,15 +459,32 @@ export class LunarClientPlayer {
    * if the protocol handler isn't available.
    * @param buffer Packet to send to the client
    */
-  private sendPacket(packet: Buffer | Packet<unknown>): void {
+  private sendPacket(
+    packet: Buffer | Packet<unknown>,
+    channel?: LunarClientPluginChannel
+  ): void {
     const buffer = packet instanceof Packet ? packet.buf.buffer : packet;
 
     if (this.options?.customHandling?.sendPacket)
-      return void this.options.customHandling.sendPacket(buffer);
+      return void this.options.customHandling.sendPacket(
+        buffer,
+        channel ?? this.channel
+      );
 
-    throw new Error(
-      'For now, you must provide a sendPacket function in the options'
-    );
+    if (this.options.client) {
+      // @ts-ignore We can safely ignore this issue because
+      // the PluginMessagePacket is available in both
+      // serverbound and clientbound contexts
+      const pluginMessage = this.options.client.packetWriter.write(
+        'PluginMessagePacket',
+        {
+          channel: channel ?? this.channel,
+          data: packet,
+        }
+      );
+
+      this.options.client.writeRaw(pluginMessage);
+    }
   }
 }
 
@@ -443,6 +510,11 @@ export interface LunarClientPlayerOptions {
    * channel registration process
    */
   pluginChannel?: LunarClientPluginChannel;
+  /***
+   * The Minecraft client to attach
+   * this Lunar Client player to
+   */
+  client?: MinecraftServerClient | MinecraftClient;
   /**
    * Functions that will be called when
    * a certain action should be done,
@@ -453,8 +525,8 @@ export interface LunarClientPlayerOptions {
    * is written yet. If you don't specify
    * any an error will be thrown.
    */
-  customHandling: {
-    sendPacket: (buffer: Buffer) => void;
+  customHandling?: {
+    sendPacket: (buffer: Buffer, channel: LunarClientPluginChannel) => void;
     registerPluginChannel: (channel: LunarClientPluginChannel) => void;
   };
   /**

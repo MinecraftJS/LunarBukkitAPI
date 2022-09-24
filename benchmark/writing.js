@@ -1,9 +1,9 @@
-const { LunarClientPacketBuilder } = require('../dist');
+const { LunarClientPacketWriter } = require('../dist');
 const { Suite } = require('benchmark');
 
 new Suite()
   .add('Writing', () => {
-    new LunarClientPacketBuilder('CooldownPacket', {
+    new LunarClientPacketWriter('CooldownPacket', {
       id: 'pearl',
       durationMs: 15000,
       iconId: 368,

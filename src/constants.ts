@@ -21,6 +21,13 @@ export enum LunarClientPluginChannel {
    * @deprecated
    */
   OLD = 'Lunar-Client',
+  /**
+   * Plugin channel associated to
+   * transfer packets
+   *
+   * Value: `transfer:channel`
+   */
+  TRANSFER = 'transfer:channel',
 }
 
 /**

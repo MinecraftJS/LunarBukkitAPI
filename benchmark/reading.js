@@ -1,20 +1,17 @@
-const {
-  LunarClientPacketBuilder,
-  LunarClientPacketHandler,
-} = require('../dist');
+const { LunarClientPacketWriter, LunarClientPacketReader } = require('../dist');
 const { Suite } = require('benchmark');
 
-const { packet } = new LunarClientPacketBuilder('CooldownPacket', {
+const { packet } = new LunarClientPacketWriter('CooldownPacket', {
   id: 'pearl',
   durationMs: 15000,
   iconId: 368,
 });
 
-const packetHandler = new LunarClientPacketHandler();
+const packetHandler = new LunarClientPacketReader();
 
 new Suite()
   .add('Reading', () => {
-    packetHandler.handle(packet.buf.buffer);
+    packetHandler.read(packet.buf.buffer);
   })
   .on('complete', (event) => {
     console.log(event.target.toString());

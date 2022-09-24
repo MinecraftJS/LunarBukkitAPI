@@ -2,9 +2,11 @@ import { BufWrapper } from '@minecraft-js/bufwrapper';
 import { EventEmitter } from 'node:events';
 import TypedEmitter from 'typed-emitter';
 import * as protocol from '.';
+import { LunarClientPluginChannel } from '../constants';
 import * as BufWrapperLunarPlugin from './BufWrapperPlugin';
+import { TransferPacket } from './client/TransferPacket';
 
-type LunarClientPacketHandlerEvents = {
+type LunarClientPacketReaderEvents = {
   [key in keyof typeof protocol]: (
     packet: InstanceType<typeof protocol[key]>
   ) => void;
@@ -23,27 +25,37 @@ const packets = Object.values(protocol);
  *
  * @example
  * ```javascript
- * const packetHandler = new PacketHandler();
+ * const packetReader = new LunarClientPacketReader();
  *
- * // Call PacketHandler#handle with
+ * // Call PacketReader#read with
  * // the buffer everytime you receive
  * // a packet
  *
- * packetHandler.on('CooldownPacket', ({ data }) => {
+ * packetReader.on('CooldownPacket', ({ data }) => {
  *   // Do something with data
  * });
  * ```
  */
-export default class LunarClientPacketHandler extends (EventEmitter as new () => TypedEmitter<LunarClientPacketHandlerEvents>) {
+export default class LunarClientPacketReader extends (EventEmitter as new () => TypedEmitter<LunarClientPacketReaderEvents>) {
   /**
-   * Handle a packet, if everything is successful
+   * Read a packet, if everything is successful
    * an event will be emited with the content of
    * the packet
+   * @param buffer The raw packet to read
+   * @param channel The plugin channel the packet comes from. Defauts to `LunarClientPacketReader.NEW`
    */
-  public handle(buffer: Buffer): void {
+  public read(buffer: Buffer, channel?: LunarClientPluginChannel): void {
+    channel = channel ?? LunarClientPluginChannel.NEW;
+
     const buf = new BufWrapper(buffer, {
       plugins: { lunar: BufWrapperLunarPlugin },
     });
+
+    if (channel === LunarClientPluginChannel.TRANSFER) {
+      const packet = new TransferPacket(buf);
+      packet.read();
+      return void this.emit('TransferPacket', packet);
+    }
 
     const id = buf.readVarInt();
     const Packet = packets.find((p) => p.id === id);

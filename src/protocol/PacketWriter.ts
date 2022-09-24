@@ -6,7 +6,7 @@ import * as BufWrapperLunarPlugin from './BufWrapperPlugin';
  * PacketBuiler class, used to easily build packets.
  * @example
  * ```javascript
- * const { packet } = new PacketBuilder('CooldownPacket', {
+ * const { packet } = new LunarClientPacketWriter('CooldownPacket', {
  *   id: 'pearl',
  *   durationMs: 5000,
  *   iconId: 368
@@ -15,7 +15,7 @@ import * as BufWrapperLunarPlugin from './BufWrapperPlugin';
  * // Do something with `packet`
  * ```
  */
-export default class LunarClientPacketBuilder<T extends keyof typeof protocol> {
+export default class LunarClientPacketWriter<T extends keyof typeof protocol> {
   public packet: InstanceType<typeof protocol[T]>;
 
   /**
@@ -24,7 +24,7 @@ export default class LunarClientPacketBuilder<T extends keyof typeof protocol> {
    * @param data Data of the packet
    * @example
    * ```javascript
-   * const { packet } = new PacketBuilder('CooldownPacket', {
+   * const { packet } = new LunarClientPacketWriter('CooldownPacket', {
    *   id: 'pearl',
    *   durationMs: 5000,
    *   iconId: 368
@@ -43,7 +43,7 @@ export default class LunarClientPacketBuilder<T extends keyof typeof protocol> {
       oneConcat: true,
       plugins: { lunar: BufWrapperLunarPlugin },
     });
-    buf.writeVarInt(Packet.id);
+    if (Packet.id) buf.writeVarInt(Packet.id);
 
     this.packet = new Packet(buf) as InstanceType<typeof protocol[T]>;
     // @ts-ignore TODO: type this so it's not weird

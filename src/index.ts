@@ -1,12 +1,12 @@
 import * as protocol from './protocol';
 import * as BufWrapperLunarPlugin from './protocol/BufWrapperPlugin';
-import LunarClientPacketBuilder from './protocol/PacketBuilder';
-import LunarClientPacketHandler from './protocol/PacketHandler';
+import LunarClientPacketReader from './protocol/PacketReader';
+import LunarClientPacketWriter from './protocol/PacketWriter';
 export * from './constants';
 export * from './Player';
 export {
-  LunarClientPacketHandler,
-  LunarClientPacketBuilder,
+  LunarClientPacketReader,
+  LunarClientPacketWriter,
   protocol,
   BufWrapperLunarPlugin,
 };
