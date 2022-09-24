@@ -483,7 +483,7 @@ export class LunarClientPlayer {
         'PluginMessagePacket',
         {
           channel: channel ?? this.channel,
-          data: packet,
+          data: buffer,
         }
       );
 
